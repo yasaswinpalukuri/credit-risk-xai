@@ -136,7 +136,7 @@ models/roc_curve_logreg.png
 
 **Yasaswin Palukuri**  
 📍 Data Science & AI Enthusiast  
-📫 [LinkedIn](https://www.linkedin.com/in/yasaswinpalukuri)
+📫 [LinkedIn](https://www.linkedin.com/in/yasaswin-palukuri)
 
 ---
 
