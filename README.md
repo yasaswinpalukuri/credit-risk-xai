@@ -1,7 +1,7 @@
 
 # 🧠 Credit Risk Scoring with Explainable AI (XAI)
 
-A machine learning pipeline to assess customer creditworthiness using real-world German credit data. This project simulates a banking-grade credit scoring model with explainable outputs using SHAP, Weight of Evidence (WoE), and GridSearchCV optimization.
+A machine learning pipeline to assess customer creditworthiness using real-world German credit data. This project simulates a banking-grade credit scoring model with explainable outputs using SHAP, Weight of Evidence (WoE), Streamlit UI, and Dockerized deployment.
 
 ---
 
@@ -13,15 +13,6 @@ Financial institutions need to assess whether a customer is likely to default on
 
 ---
 
-## 🔍 Dataset
-
-- **Source**: [German Credit Dataset (Kaggle)](https://www.kaggle.com/datasets/uciml/german-credit)
-- **Records**: 1,000
-- **Target**: Synthetic `Risk` label created using domain rules
-- **Features**: Age, Job type, Housing, Saving accounts, Checking account, Credit amount, Duration, Purpose
-
----
-
 ## ⚙️ Tech Stack
 
 | Component         | Tool/Library                |
@@ -30,15 +21,17 @@ Financial institutions need to assess whether a customer is likely to default on
 | Data Handling    | Pandas, Numpy               |
 | Modeling         | Scikit-learn, GridSearchCV  |
 | Feature Encoding | WoE Binning, IV             |
-| Explainability   | SHAP (planned)              |
+| Explainability   | SHAP                        |
 | Visualization    | Matplotlib, Seaborn         |
-| Dashboard (Planned) | Streamlit                |
-| Deployment (Planned) | Docker                  |
+| Dashboard        | Streamlit                   |
+| Deployment       | Docker                      |
 | Version Control  | Git, GitHub                 |
 
 ---
 
 ## 🚀 How to Run
+
+### 💻 Local (Python)
 
 ```bash
 # Clone the repository
@@ -52,12 +45,25 @@ source .venv/Scripts/activate  # Or . .venv/bin/activate on Mac/Linux
 # Install dependencies
 pip install -r requirements.txt
 
-# Run training
+# Run training and tuning
 python src/train.py
-
-# Run tuning + evaluation
 python src/tune_model.py
+
+# Run Streamlit UI
+streamlit run app/credit_scoring_app.py
 ```
+
+---
+
+### 🐳 Run with Docker
+
+```bash
+# From root folder
+docker build -f docker/Dockerfile -t credit-risk-app .
+docker run -p 8501:8501 credit-risk-app
+```
+
+Visit 👉 http://localhost:8501 to access the app.
 
 ---
 
@@ -65,59 +71,42 @@ python src/tune_model.py
 
 ```
 credit-risk-xai/
-├── data/                   # Raw + processed data
+├── data/
 │   ├── raw/
 │   └── processed/
-├── notebooks/              # EDA and analysis notebooks
-├── src/                    # Source code: preprocessing, training, tuning
+├── notebooks/
+├── src/
 │   ├── data_prep.py
 │   ├── train.py
 │   └── tune_model.py
-├── models/                 # Saved models and evaluation visuals (ROC, CM)
-├── app/                    # Streamlit app files (planned)
-├── docker/                 # Dockerfile and container setup (planned)
-├── logs/                  # Daily learning + dev logs
+├── models/
+├── app/
+│   └── credit_scoring_app.py
+├── docker/
+│   └── Dockerfile
+├── logs/
 │   └── daily_notes/
-│       ├── 9th_June.md
-│       ├── 10th_June.md
-│       ├── 12th_June.md
-│       └── 13th_June.md
-├── README.md               # Project overview and documentation
-├── requirements.txt        # Python dependencies
-└── .gitignore              # Files/folders ignored by Git
-
+├── requirements.txt
+└── README.md
 ```
-
-| Path                           | Description                                               |
-|--------------------------------|-----------------------------------------------------------|
-| `data/raw/`                    | Original downloaded dataset (`german_credit_data.csv`)   |
-| `data/processed/`              | Cleaned + labeled dataset (`credit_data_with_risk.csv`)  |
-| `models/`                      | Saved models (`.pkl`) and evaluation plots (`.png`)       |
-| `logs/daily_notes/`            | Daily progress logs (`9th_June.md` to `13th_June.md`)     |
-| `notebooks/`                   | EDA, feature engineering, model training + tuning         |
-| `src/data_prep.py`             | WoE + IV functions for categorical encoding               |
-| `src/train.py`                 | Script to train baseline models                           |
-| `src/tune_model.py`            | GridSearchCV + evaluation script (AUC, CM, ROC)           |
-| `app/` *(planned)*             | Placeholder for Streamlit or FastAPI app                  |
-| `docker/` *(planned)*          | Placeholder for Docker deployment setup                   |
-| `.gitignore`                   | Git exclusions (data, logs, environment)                  |
-| `README.md`                    | 📄 This file                                              |
-| `requirements.txt`             | 🧪 All dependencies (`pip install -r`)                   |
 
 ---
 
 ## 🧪 Model Evaluation
 
 - ✅ Logistic Regression (Baseline + Tuned)
-- ✅ Decision Tree (Baseline)
-- 🔄 ROC Curve & Confusion Matrix visualized
-- 🔄 AUC used as primary metric for model selection
+- ✅ Decision Tree (Baseline + Tuned)
+- ✅ SHAP Waterfall and Beeswarm explainability
+- ✅ ROC Curve & Confusion Matrix
+- ✅ Streamlit interactive predictions
 
-Evaluation plots saved in:
-```
-models/confusion_matrix_logreg.png
-models/roc_curve_logreg.png
-```
+Evaluation plots saved in `/models/`:
+- `confusion_matrix_logreg.png`
+- `roc_curve_logreg.png`
+- `shap_beeswarm_logreg.png`
+- `shap_waterfall_logreg_sample0.png`
+- `shap_beeswarm_tree.png`
+- `shap_waterfall_tree_sample0.png`
 
 ---
 
@@ -125,10 +114,13 @@ models/roc_curve_logreg.png
 
 | Day         | Highlights |
 |-------------|------------|
-| Day 01 (9th June)  | Folder setup, dataset loaded, EDA done, risk label created |
-| Day 02 (10th June) | WoE + IV implemented and visualized |
-| Day 03 (12th June) | Baseline models trained and saved |
-| Day 04 (13th June) | Hyperparameter tuning + evaluation plots generated |
+| Day 01 (9th June)   | Folder setup, dataset loaded, EDA, risk labeling |
+| Day 02 (10th June)  | WoE + IV calculated and visualized |
+| Day 03 (12th June)  | Baseline models trained + saved |
+| Day 04 (13th June)  | Hyperparameter tuning, AUC, ROC, CM evaluation |
+| Day 05 (13th June)  | Tuned Decision Tree, model comparison added |
+| Day 06 (15th June)  | SHAP Explainability implemented |
+| Day 07 (18th June)  | Streamlit UI built + Dockerized for deployment |
 
 ---
 
