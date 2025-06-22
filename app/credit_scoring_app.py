@@ -3,6 +3,7 @@ import pandas as pd
 import joblib
 import shap
 import matplotlib.pyplot as plt
+from PIL import Image
 
 # --- Load model ---
 model = joblib.load("models/logistic_model_tuned.pkl")
@@ -12,6 +13,9 @@ st.title("💳 Credit Risk Scoring App")
 
 # --- Input Section ---
 st.header("📥 Enter Applicant Details")
+st.set_page_config(page_title="Credit Risk Scorer", layout="wide")
+st.title("💳 Credit Risk Prediction with Explainable AI")
+st.markdown("An ML-powered Streamlit app to assess loan risk with full interpretability.")
 
 saving = st.selectbox("Saving Accounts", ['little', 'moderate', 'rich', 'quite rich'])
 checking = st.selectbox("Checking Account", ['none', 'little', 'moderate', 'rich'])
@@ -57,3 +61,21 @@ if st.button("🔍 Predict Risk"):
     fig = plt.figure()
     shap.plots.waterfall(shap_values[0], show=False)
     st.pyplot(fig)
+
+# --- SHAP Global Visualization ---
+st.markdown("---")
+st.subheader("🌍 SHAP Global Interpretability")
+
+col1, col2 = st.columns(2)
+
+with col1:
+    st.markdown("**Top Feature Impact (Global)**")
+    shap_summary = Image.open("models/shap_summary_tree.png")
+    st.image(shap_summary, use_column_width=True)
+
+with col2:
+    st.markdown("**Local Explanation: Sample 0**")
+    shap_local = Image.open("models/shap_waterfall_tree_sample0.png")
+    st.image(shap_local, use_column_width=True)
+
+st.caption("🔎 SHAP helps explain how each feature pushes predictions toward Good or Bad credit decisions.")
