@@ -59,7 +59,7 @@ streamlit run app/credit_scoring_app.py
 
 ```bash
 # From root folder
-docker build -f docker/Dockerfile -t credit-risk-app .
+docker build -t credit-risk-app .
 docker run -p 8501:8501 credit-risk-app
 ```
 
